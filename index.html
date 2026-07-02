@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anshika Singh | Professional Portfolio</title>
+    <style>
+        /* Modern CSS Reset & Variables */
+        :root {
+            --primary: #0f172a;
+            --secondary: #3b82f6;
+            --accent: #1d4ed8;
+            --bg-light: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* Sticky Navigation */
+        nav {
+            background-color: var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .profile-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid var(--secondary);
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            background-color: var(--secondary);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .contact-links a:hover {
+            background-color: var(--accent);
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Grid for Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--secondary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card .tech-stack {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: white;
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .skill-tag:hover{
+            scale: inherit;
+            color:#5c8ab8;
+            transform:translateY(-3px);
+            box-sizing: calc(4);
+        }
+        /* Education & Experience Details */
+        .timeline-item {
+            background: rgb(247, 186, 186);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--secondary);
+            position: relative;
+        }
+
+        .timeline-item h3 {
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .timeline-item span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .certificate-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .certificate-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#certificates">Certificates</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <img src="anshikaa.jpeg" alt="Profile Photo" class="profile-photo">
+        <h1>Anshika Singh</h1>
+        <p>Software & Web Developer | B.Tech Student</p>
+        <div class="contact-links">
+            <a href="anshikamuskansingh@gmail.com">Email</a>
+            <a href="https://www.linkedin.com/in/webdeveloper-anshika-singh/z" target="_blank">LinkedIn</a>
+            <a href="https://github.com/anshikamuskansi" target="_blank">GitHub</a>
+            <a href="https://www.codechef.com/users/worm_array_37" target="_blank">Codechef</a>
+              <a href="https://leetcode.com/u/anshikamuskansi/" target="_blank">Leetcode</a>
+            
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <section id="about" style="margin-bottom: 5rem; text-align: center;">
+            <h2 class="section-title">About Me</h2>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem;">
+                I am a motivated and detail-oriented engineering student with a 
+                 foundation in software development , algorithms, and web technologies. 
+                 I am passionate about building intuitive applications and e-commerce 
+                 solutions that solve real-world problems. Currently seeking a 
+                 challenging internship to apply my skills in C++, web development, 
+                 and front-end development.
+            </p>
+        </section>
+
+        <section id="skills" style="margin-bottom: 5rem;">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-container">
+                <div class="skill-tag">C++ & Javascript(basic)</div>
+                <div class="skill-tag">PHP & Java(for web designing)</div>
+                <div class="skill-tag">HTML, CSS, Bootstrap</div>
+                <div class="skill-tag">MySQL</div>
+                <div class="skill-tag">Data Structures & Algorithms(ongoing)</div> 
+  
+            </div>
+        </section>
+
+        <section id="projects" style="margin-bottom: 5rem;">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                
+                <div class="card">
+                    <h3>Purposeful Scroll</h3>
+                    <div class="tech-stack">HTML | CSS | JavaScript</div>
+                    <p>An interactive web platform designed to combat endless reel scrolling by celebrating global days. Includes a gamified health-focus feature to earn reward coins through physical activities.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Coffee Moment</h3>
+                    <div class="tech-stack">Web Technologies</div>
+                    <p>Designed a tourist website tailored for BHU, Varanasi. Successfully enhanced user experience and boosted local tourism engagement by 25%.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Closet Collection</h3>
+                    <div class="tech-stack">E-Commerce Development</div>
+                    <p>Developed an e-commerce platform helping users curate attractive closets by purchasing clothes online, resulting in a 15% increase in sales.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Her Healers</h3>
+                    <div class="tech-stack">Web Technologies</div>
+                    <p>Created a donation website dedicated to poor women's education, healthcare, and awareness. Promoted social responsibility and successfully raised $10,000.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="education" style="margin-bottom: 5rem;">
+            <h2 class="section-title">Education</h2>
+            
+            <div class="timeline-item">
+                <h3>B.Tech in [Your Engineering Branch]</h3>
+                <span>ABES Engineering College | Currently in 6th Semester | <strong>CGPA: 8.09(5th sem)</strong></span>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Diploma</h3>
+                <span>Board: BTEUP | 2021 | Percentage: 78%</span>
+            </div>
+            
+            <div class="timeline-item">
+                <h3>Matriculate</h3>
+                <span>Jai Public School Varanasi (Board: CBSE) | 2019-2020 | Percentage: 80.33%</span>
+            </div>
+        </section>
+
+        <section id="certificates" style="margin-bottom: 5rem;">
+            <h2 class="section-title">Certificates</h2>
+
+            <div class="timeline-item">
+                <h3>Certificate of Participation: 6th Technovation Hackathon</h3>
+                <span>Sharda University, Greater Noida | Jan 21 – Jan 26, 2025</span>
+                <p>Successfully participated in the hackathon themed on "Data-Driven Urban Planning and Analytics (DUPA)", organized by Sharda School of Engineering and Technology.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Bootcamp: Network Ninja's Firewall</h3>
+                <span>DEVTOWN (MSME)</span>
+                <p>Completed intensive training covering modern network security and firewall configuration.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Bootcamp: NOSQL Ninjas</h3>
+                <span>DEVTOWN (MSME)</span>
+                <p>Completed training focused on NoSQL database architecture and implementation.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>PHP Paathshala Certification</h3>
+                <span>PHP Paathshala</span>
+                <p>Certified in backend web development using PHP.</p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Certificate of Excellence: Java</h3>
+                <span>DigiCoders Technologies Pvt Ltd, Lucknow | Aug 1, 2023 – Sep 15, 2023</span>
+                <p>Completed an intensive 45-day summer training program focused on Java programming, achieving an <strong>'A++'</strong> grade.</p>
+            </div>
+        </section>
+
+        <section id="achievements" style="margin-bottom: 5rem;">
+            <h2 class="section-title">Achievements & Awards</h2>
+
+            <div class="timeline-item">
+                <h3>Ardethon (Hackathon) - 2nd Prize</h3>
+                <span>ABESEC (ARDEMA)</span>
+                <p>Achieved 2nd prize in Ardethon with the <strong>Her Healers</strong> project, showcasing exceptional web development skills and expertise.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Anshika Singh</p>
+    </footer>
+
+</body>
+</html>
