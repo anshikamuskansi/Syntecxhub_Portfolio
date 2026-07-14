@@ -1,0 +1,87 @@
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  text-align: center;
+  margin: 0;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.input-box {
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 220px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background: #4CAF50;
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  margin: 10px auto;
+  padding: 12px;
+  background: white;
+  width: 320px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px;
+  animation: fadeIn 0.4s ease;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+  background: #d4edda;
+}
+
+/* Buttons inside list */
+li div {
+  display: flex;
+  gap: 5px;
+}
+
+/* Animation for task */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Coin animation */
+.coin-pop {
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); color: gold; }
+  100% { transform: scale(1); }
+}

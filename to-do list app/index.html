@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo App with Supercoins</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>📝 Todo App</h1>
+
+    <h2>💰 Supercoins: <span id="coins">0</span></h2>
+
+    <div class="input-box">
+      <input type="text" id="taskInput" placeholder="Enter a task">
+      <button onclick="addTask()">Add</button>
+    </div>
+
+    <h3>⏳ Upcoming Tasks</h3>
+    <ul id="pendingList"></ul>
+
+    <h3>✅ Completed Tasks</h3>
+    <ul id="completedList"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
