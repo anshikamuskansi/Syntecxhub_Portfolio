@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Notes — Image Carousel</title>
+<style>
+  :root{
+    --ink:#1c1a17;
+    --paper:#f6f2ea;
+    --brass:#a9762f;
+    --brass-dark:#7c5620;
+    --moss:#4a5d43;
+    --line: rgba(28,26,23,0.14);
+    --shadow: 0 20px 40px rgba(28,26,23,0.25);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(169,118,47,0.08), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(74,93,67,0.08), transparent 40%),
+      var(--paper);
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    color: var(--ink);
+    padding: 32px 16px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width: 720px;
+  }
+
+  .eyebrow{
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--brass-dark);
+    text-align:center;
+    margin-bottom: 6px;
+  }
+
+  h1{
+    text-align:center;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    margin: 0 0 24px;
+  }
+
+  .carousel{
+    position:relative;
+    border: 1px solid var(--line);
+    background: #0f0d0b;
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  .frame{
+    position:relative;
+    width:100%;
+    aspect-ratio: 4 / 3;
+    overflow:hidden;
+  }
+
+  .slide{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    transform: scale(1.04);
+    transition: opacity 900ms cubic-bezier(.22,.61,.36,1), transform 1400ms cubic-bezier(.22,.61,.36,1);
+    pointer-events:none;
+  }
+  .slide.active{
+    opacity:1;
+    transform: scale(1);
+    pointer-events:auto;
+    z-index:2;
+  }
+
+  .slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    filter: saturate(0.95) contrast(1.02);
+  }
+
+  .caption{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding: 18px 22px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
+    color:#f6f2ea;
+  }
+  .caption .num{
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    color: #d8b273;
+    display:block;
+    margin-bottom:4px;
+  }
+  .caption h2{
+    margin:0;
+    font-weight:400;
+    font-size: clamp(16px, 3vw, 20px);
+  }
+  .caption p{
+    margin:4px 0 0;
+    font-size:13px;
+    opacity:0.85;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* nav arrows */
+  .nav-btn{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width:42px; height:42px;
+    border-radius:50%;
+    border:1px solid rgba(246,242,234,0.5);
+    background: rgba(15,13,11,0.35);
+    backdrop-filter: blur(4px);
+    color:#f6f2ea;
+    font-size:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:5;
+    transition: background 200ms ease, transform 200ms ease, border-color 200ms ease;
+  }
+  .nav-btn:hover{
+    background: rgba(169,118,47,0.85);
+    border-color: transparent;
+  }
+  .nav-btn:active{ transform: translateY(-50%) scale(0.92); }
+  .nav-btn.prev{ left:14px; }
+  .nav-btn.next{ right:14px; }
+  .nav-btn:focus-visible{
+    outline: 2px solid #d8b273;
+    outline-offset: 2px;
+  }
+
+  /* progress bar (autoplay indicator) */
+  .progress-track{
+    height:2px;
+    width:100%;
+    background: rgba(246,242,234,0.15);
+    position:relative;
+    z-index:5;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: var(--brass);
+  }
+  .progress-fill.animating{
+    transition: width 5000ms linear;
+    width:100%;
+  }
+
+  /* dots */
+  .dots{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    padding: 16px 0 4px;
+  }
+  .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    border:1px solid var(--brass-dark);
+    background:transparent;
+    cursor:pointer;
+    padding:0;
+    transition: background 200ms ease, width 200ms ease, border-radius 200ms ease;
+  }
+  .dot.active{
+    background: var(--brass-dark);
+    width:22px;
+    border-radius:5px;
+  }
+  .dot:focus-visible{
+    outline: 2px solid var(--brass-dark);
+    outline-offset: 3px;
+  }
+
+  .controls-row{
+    display:flex;
+    justify-content:center;
+    margin-top: 8px;
+  }
+  .play-toggle{
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:none;
+    border:1px solid var(--line);
+    color: var(--ink);
+    padding:6px 14px;
+    border-radius: 20px;
+    cursor:pointer;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .play-toggle:hover{
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  @media (max-width: 480px){
+    .nav-btn{ width:36px; height:36px; font-size:15px; }
+    .caption{ padding:14px 16px 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .slide{ transition: opacity 400ms ease; transform:none !important; }
+    .progress-fill.animating{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Field Notes No. 04</div>
+  <h1>Landscapes, Passing Through</h1>
+
+  <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Landscape image gallery">
+    <div class="frame" id="frame">
+      <!-- slides injected by JS -->
+    </div>
+
+    <button class="nav-btn prev" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+    <button class="nav-btn next" id="nextBtn" aria-label="Next slide">&#8594;</button>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+  <div class="controls-row">
+    <button class="play-toggle" id="playToggle">Pause</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const slidesData = [
+    {
+      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80",
+      title: "Ridgeline at First Light",
+      place: "Dolomites, Italy"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80",
+      title: "Forest Floor, Slow Light",
+      place: "Redwood Coast, California"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80",
+      title: "Where the Grass Meets Nothing",
+      place: "Torridon, Scotland"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
+      title: "A Held Breath of Water",
+      place: "Lofoten, Norway"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1200&q=80",
+      title: "Dune Line, Late Afternoon",
+      place: "Namib Desert, Namibia"
+    }
+  ];
+
+  const frame = document.getElementById('frame');
+  const dotsWrap = document.getElementById('dots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const playToggle = document.getElementById('playToggle');
+  const progressFill = document.getElementById('progressFill');
+
+  let current = 0;
+  let isPlaying = true;
+  let autoplayTimer = null;
+  const AUTOPLAY_MS = 5000;
+
+  // Build slides
+  slidesData.forEach((s, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'slide' + (i === 0 ? ' active' : '');
+    slide.setAttribute('data-index', i);
+    slide.innerHTML = `
+      <img src="${s.src}" alt="${s.title}" draggable="false">
+      <div class="caption">
+        <span class="num">${String(i+1).padStart(2,'0')} / ${String(slidesData.length).padStart(2,'0')}</span>
+        <h2>${s.title}</h2>
+        <p>${s.place}</p>
+      </div>
+    `;
+    frame.appendChild(slide);
+
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i+1));
+    dot.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(dot);
+  });
+
+  const slideEls = frame.querySelectorAll('.slide');
+  const dotEls = dotsWrap.querySelectorAll('.dot');
+
+  function render(){
+    slideEls.forEach((el, i) => el.classList.toggle('active', i === current));
+    dotEls.forEach((el, i) => el.classList.toggle('active', i === current));
+  }
+
+  function goTo(index, userInitiated){
+    current = (index + slideEls.length) % slideEls.length;
+    render();
+    if (userInitiated) restartAutoplay();
+  }
+
+  function next(userInitiated){ goTo(current + 1, userInitiated); }
+  function prev(userInitiated){ goTo(current - 1, userInitiated); }
+
+  function startProgress(){
+    progressFill.classList.remove('animating');
+    // force reflow to restart CSS transition
+    void progressFill.offsetWidth;
+    progressFill.classList.add('animating');
+  }
+
+  function stopProgress(){
+    progressFill.classList.remove('animating');
+    progressFill.style.width = getComputedStyle(progressFill).width;
+    void progressFill.offsetWidth;
+    progressFill.style.width = '0%';
+  }
+
+  function startAutoplay(){
+    if (!isPlaying) return;
+    startProgress();
+    autoplayTimer = setTimeout(() => {
+      next(false);
+      startAutoplay();
+    }, AUTOPLAY_MS);
+  }
+
+  function stopAutoplay(){
+    clearTimeout(autoplayTimer);
+    stopProgress();
+  }
+
+  function restartAutoplay(){
+    stopAutoplay();
+    if (isPlaying) startAutoplay();
+  }
+
+  prevBtn.addEventListener('click', () => prev(true));
+  nextBtn.addEventListener('click', () => next(true));
+
+  playToggle.addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    playToggle.textContent = isPlaying ? 'Pause' : 'Play';
+    if (isPlaying) {
+      startAutoplay();
+    } else {
+      stopAutoplay();
+    }
+  });
+
+  // keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prev(true);
+    if (e.key === 'ArrowRight') next(true);
+  });
+
+  // touch swipe support
+  let touchStartX = null;
+  frame.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, {passive:true});
+  frame.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 40) {
+      diff < 0 ? next(true) : prev(true);
+    }
+    touchStartX = null;
+  }, {passive:true});
+
+  // pause on hover (desktop courtesy)
+  frame.addEventListener('mouseenter', () => { if (isPlaying) stopAutoplay(); });
+  frame.addEventListener('mouseleave', () => { if (isPlaying) startAutoplay(); });
+
+  render();
+  startAutoplay();
+})();
+</script>
+
+</body>
+</html>
